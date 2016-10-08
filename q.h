@@ -10,6 +10,7 @@
 #ifndef CSE330P1_Q_H
 #define CSE330P1_Q_H
 
+#include "tcb.h"
 
 struct item
 {
@@ -29,7 +30,7 @@ void error(const char *msg)
 }
 
 //tests if queue pointed to by head is empty.  Returns true/false.  #include <stdbool.h> in test cases and other body files. Compile in C99 mode.
-bool isEmpty(struct item* head)
+bool isEmpty(struct TCB_t* head)
 {
     //create boolean flag to return with status of queue
     bool isEmpty = false;
@@ -46,21 +47,21 @@ bool isEmpty(struct item* head)
 }
 
 // returns a pointer to a new q-element, uses memory allocation
-struct item* NewItem()
+struct TCB_t* NewItem()
 {
     //create item variable
-    struct item* new_item;
+    struct TCB_t* new_item;
     //malloc item (#include <stdlib.h> in test cases and other body files)
-    new_item = malloc(sizeof(struct item));
+    new_item = malloc(sizeof(struct TCB_t));
     //return item
     return new_item;
 }
 
 // creates a empty queue, consisting of one dummy element, returns the head pointer.
-struct item* newQueue()
+struct TCB_t* newQueue()
 {
     //create head variable
-    struct item* head;
+    struct TCB_t* head;
     //malloc head (#include <stdlib.h> in test cases and other body files)
     head = malloc(sizeof(struct item));
     //make head->next point at head
@@ -72,7 +73,7 @@ struct item* newQueue()
 }
 
 // adds a queue item, pointed to by “item”, to the queue pointed to by head.
-void AddQueue(struct item* head, struct item* new_item)
+void AddQueue(struct TCB_t* head, struct TCB_t* new_item)
 {
     /*
      * h -> h ; h <- h
@@ -80,7 +81,7 @@ void AddQueue(struct item* head, struct item* new_item)
      * h -> new1 -> new2 -> h; new2 <- h <- new1 <- new2
      */
     //create pointer at end of list
-    struct item* last = head->prev;
+    struct TCB_t* last = head->prev;
     //make last element->next point to new_item
     last->next = new_item;
     //make new_item->prev point to last element
@@ -94,10 +95,10 @@ void AddQueue(struct item* head, struct item* new_item)
 
 // deletes first item in queue and returns a pointer to the deleted item. If the queue is already empty, flag error.
 // Returns NULL if queue is empty
-struct item* DelQueue(struct item* head)
+struct TCB_t* DelQueue(struct TCB_t* head)
 {
     //create variable that will point to popped item
-    struct item* popped_item = NULL;
+    struct TCB_t* popped_item = NULL;
 
     //if head is empty, print error
     if(isEmpty(head))
