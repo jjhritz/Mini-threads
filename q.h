@@ -12,13 +12,6 @@
 
 #include "tcb.h"
 
-struct item
-{
-    int payload;
-    struct item* next;
-    struct item* prev;
-};
-
 //This function is called when a system call fails. It displays a message about the error on stderr
 //(#include <stdio.h>in test cases and other body files)
 void error(const char *msg)
@@ -63,7 +56,7 @@ struct TCB_t* newQueue()
     //create head variable
     struct TCB_t* head;
     //malloc head (#include <stdlib.h> in test cases and other body files)
-    head = malloc(sizeof(struct item));
+    head = malloc(sizeof(struct TCB_t));
     //make head->next point at head
     head->next = head;
     //make head->prev point at head
