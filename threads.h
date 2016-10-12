@@ -11,10 +11,6 @@
 struct TCB_t* ReadyQ;
 struct TCB_t* Curr_Thread;
 
-void init_readyq() {
-  ReadyQ = newQueue();
-}
-
 void start_thread(void (*function)(void))
 {
     //allocate a stack (via malloc) of a certain size (choose 8192)
@@ -51,9 +47,7 @@ void yield() // similar to run
     //get the next thread in the queue
     Curr_Thread = DelQueue(ReadyQ);
     //swap the context, from Prev_Thread to the thread pointed to Curr_Thread
-    ucontext_t parent;     // get a place to store the main context, for faking
-    getcontext(&parent);   // magic sauce
-    swapcontext(&parent, &(Curr_Thread->context));  // start the next thread
+    swapcontext(&(Prev_Thread->context), &(Curr_Thread->context));  // start the next thread
     // end pseudo code
 }
 
