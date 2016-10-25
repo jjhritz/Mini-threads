@@ -2,7 +2,7 @@
 // Created by student on 10/23/16.
 //
 
-#include "tcb.h"
+// #include "tcb.h"
 #include "q.h"
 #include "threads.h"
 
@@ -14,14 +14,15 @@ typedef struct sem_t
 {
     int val;        //value of the semaphore
     TCB_t* queue;   //queue of threads waiting on this semaphore
-}sem_t;
+} sem_t;
 
 
 // Initializes the value field with the specified value.
 void InitSem(sem_t* sem, int val)
 {
-    //set the value of the paramater semaphore to the parameter value
+    //set the value of the parameter semaphore to the parameter value
     sem->val = val;
+    sem->queue = newQueue();
 }
 
 //decrements the semaphore, and if the value is less than zero
@@ -31,8 +32,8 @@ void P(sem_t* sem)
     //decrement the semaphore
     sem->val--;
 
-    //if the value is LTE zero, block the thread
-    if(sem->val <= 0)
+    // if the value is LTE zero, block the thread
+    if(sem->val < 0)
     {
         //add the current thread to the semaphore queue
         AddQueue(sem->queue, Curr_Thread);
@@ -59,10 +60,9 @@ void V(sem_t* sem)
     if(sem->val <= 0)
     {
         AddQueue(ReadyQ, DelQueue(sem->queue));
-
-        //yield to the next thread
-        yield();
     }
+    //yield to the next thread
+    yield();
 }
 
 #endif //CSE330PROJECT_SEM_H
