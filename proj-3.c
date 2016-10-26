@@ -60,10 +60,18 @@ int main() {
    * since you can have a case where the buffer is both not full
    * and not empty and could end up reading and writing simultaneously.
    * But here everything is single threaded so we have no problem.
+   *
+   * You can mix up the number of producers and consumers below, as long
+   * as there is at least one consumer and one producer there will be no
+   * segfault.
    */
+
   start_thread(&prod);
-  start_thread(&prod);
-  start_thread(&cons);
+  // start_thread(&prod);
+  // start_thread(&prod);
+  // start_thread(&prod);
+  // start_thread(&prod);
+  // start_thread(&cons);
   start_thread(&cons);
 
   run();
