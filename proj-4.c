@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <alloca.h>
+#include <unistd.h>
 #include "sem.h"
 
 #define forever while(true)
@@ -26,6 +27,8 @@ void child()
 
         //increment element in arr at the position indicated by the child's thread number
         //relative to the parent
+        // printf ("here tid %d\n", Curr_Thread ==NULL);
+        // arr[0]++;
         arr[(Curr_Thread->thread_id) - 1]++;
 
         //release block_parent
@@ -39,25 +42,25 @@ void print()
     printf("[");
 
     //print all elements except the last one
-    for(int i; i < (arr_size - 1); i++)
+    for(int i = 0; i < (arr_size - 1); i++)
     {
         printf("%d, ", arr[i]);
     }
 
     //print last element
     printf("%d", arr[arr_size - 1]);
-
-    printf("]");
+    printf("]\n");
 }
 
 void parent()
 {
     //initialize arr to size arr_size and containing all 0s
-    arr = realloc(arr, arr_size);
-    memset(arr, 0, arr_size);
+    int bytes = arr_size * sizeof(int);
+    arr = realloc(arr, bytes);
+    memset(arr, 0, bytes);
 
-    //create 3 children running child function
-    for(int i = 0; i < 3; i++)
+    //create N children running child function
+    for(int i = 0; i < arr_size; i++)
     {
         start_thread(&child);
     }
@@ -65,20 +68,21 @@ void parent()
     //forever
     forever
     {
-        //invoke block_parent 3 times
+        //invoke block_parent N times
         for(int i = 0; i < arr_size; i++)
         {
             P(&block_parent);
         }
 
         //print array contents
-        print(3);
+        print();
 
-        //release block_child 3 times
+        //release block_child N times
         for(int i = 0; i < arr_size; i++)
         {
             V(&block_child);
         }
+        sleep(1);
     }
     //endforever
 }
@@ -89,14 +93,17 @@ int main(int argc, const char* argv[])
     ReadyQ = newQueue();
 
     //EXTENSION: convert argv[1] (the number of threads) to an int and store as arr_size
-    //arr_size = atoi(argv[1]);
+    if (argc > 1) {
+        arr_size = atoi(argv[1]);
+    }
 
     //allocate the array
+    // We probably don't need the realloc if we compute the array size before malloc
     arr = malloc(arr_size * sizeof(int));
 
     //initialize semaphores
-    InitSem(&block_parent,0);
-    InitSem(&block_child, 0);
+    InitSem(&block_parent, 0);
+    InitSem(&block_child, arr_size);
 
     //create parent thread
     start_thread(&parent);
