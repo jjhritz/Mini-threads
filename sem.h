@@ -2,7 +2,7 @@
 // Created by student on 10/23/16.
 //
 
-#include "q.h"
+#include "threads.h"
 
 #ifndef CSE330PROJECT_SEM_H
 #define CSE330PROJECT_SEM_H

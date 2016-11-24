@@ -10,7 +10,7 @@ typedef struct TCB_t {
 
 int global_thread_id = 0;
 
-void init_TCB (TCB_t *tcb, void *function, void *stackP, int stack_size)
+void init_TCB (TCB_t *tcb, void (*function), void *stackP, int stack_size)
 {
     memset(tcb, '\0', sizeof(TCB_t));       // wash, rinse
     getcontext(&tcb->context);              // have to get parent context, else snow forms on hell
